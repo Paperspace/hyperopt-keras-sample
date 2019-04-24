@@ -150,10 +150,9 @@ This could help to redefine the hyperparameters and to narrow them down successi
 
 ## Best result
 
-The best model is this one: `results/model_0.676100010872_6066e.txt.json`.
-
 The final accuracy is of 67.61% in average on the 100 fine labels, and is of 77.31% in average on the 20 coarse labels.
-My results are comparable to the ones in the middle of [that list](http://rodrigob.github.io/are_we_there_yet/build/classification_datasets_results.html#43494641522d313030), under the CIFAR-100 section. The only image preprocessing that I do is a random flip left-right.
+The results are comparable to the ones in the middle of [that list](http://rodrigob.github.io/are_we_there_yet/build/classification_datasets_results.html#43494641522d313030), under the CIFAR-100 section. 
+The only image preprocessing that we do is a random flip left-right.
 
 ### Best hyperspace found:
 ```python
