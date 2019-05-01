@@ -1,6 +1,6 @@
 # Paperspace Hyperparameter Tuning for solving CIFAR-100 with a convolutional neural network (CNN) built with Keras and TensorFlow, GPU backend
 
-This project acts as both a tutorial and demo for using Paperspace Hyperparameter Tuning based on _Hyperopt_ with Keras, TensorFlow, and TensorBoard. Not only do we try to find the best hyperparameters for the given hyperspace, but we moreover represent the neural network architecture as hyperparameters that can be tuned. This serves to automate the process of searching for the best neural architecture configuration and hyperparameters.
+This project acts as both a tutorial and demo for using Paperspace Hyperparameter Tuning based on _Hyperopt_ with Keras, TensorFlow, and TensorBoard. Not only do we try to find the best hyperparameters for the given hyperspace, but we also represent the neural network architecture as hyperparameters that can be tuned. This serves to automate the process of searching for the best neural architecture configuration and hyperparameters.
 
 Here, we are meta-optimizing a neural net and its architecture using the CIFAR-100 dataset, a computer vision task with 100 fine labeled items. This code could be easily transferred to another vision dataset or even to another machine learning task.
 
