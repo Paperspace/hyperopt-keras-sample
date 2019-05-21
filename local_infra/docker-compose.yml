@@ -1,23 +1,27 @@
 version: '3'
 
 services:
-  mongo_db:
+  hks_mongo_db:
     image: mongo:latest
     ports:
       - "27017:27017"
 
-  hyperopt:
+  hks_hyperopt:
     build:
       context: ..
       dockerfile: local_infra/Dockerfile
-    command: python test_hyperopt.py
+    command: python /hyper_param/hyperopt_optimize.py
     depends_on:
-      - mongo_db
+      - hks_mongo_db
+    env_file:
+      - ../.env
 
-  hyperopt_worker:
+  hks_hyperopt_worker:
     build:
       context: ..
       dockerfile: local_infra/Dockerfile
-    command: hyperopt-mongo-worker --mongo mongo_db:27017/foo_db --poll-interval=2.0 --exp-key=exp1
+    command: hyperopt-mongo-worker --mongo hks_mongo_db:27017/testing --poll-interval=2.0 --exp-key=testing
     depends_on:
-      - mongo_db
+      - hks_mongo_db
+    env_file:
+      - ../.env

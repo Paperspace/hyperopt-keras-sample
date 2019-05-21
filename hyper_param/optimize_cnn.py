@@ -1,19 +1,20 @@
 import traceback
 
-from neural_net import build_and_train, build_model
-from utils import print_json, save_json_result, load_best_hyperspace
-
+from neural_net import build_and_train
+from utils import save_json_result
 
 import keras.backend as K
-from hyperopt import hp, tpe, fmin, Trials
 
 
 def optimize_cnn(hype_space):
     """Build a convolutional neural network and train it."""
+    from hyperopt import STATUS_FAIL
+
     try:
         model, model_name, result, _ = build_and_train(hype_space)
 
         # Save training results to disks with unique filenames
+        # TODO do we need this? this save to json on disc not to mongo. Not sure if we want always save to disc
         save_json_result(model_name, result)
 
         K.clear_session()

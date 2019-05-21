@@ -8,10 +8,9 @@ from keras.datasets import cifar100  # from keras.datasets import cifar10
 from keras.layers.core import K  # import keras.backend as K
 from keras.optimizers import Adam, Nadam, RMSprop
 import tensorflow as tf
-from hyperopt import STATUS_OK, STATUS_FAIL
+from hyperopt import STATUS_OK
 
 import uuid
-import traceback
 import os
 
 
@@ -36,7 +35,7 @@ y_train_c = keras.utils.to_categorical(y_train_c, NB_CLASSES_COARSE)
 y_test_coarse = keras.utils.to_categorical(y_test_coarse, NB_CLASSES_COARSE)
 
 # You may want to reduce this considerably if you don't have a killer GPU:
-EPOCHS = 100
+EPOCHS = int(os.environ.get('HKS_EPOCHS', 100))
 STARTING_L2_REG = 0.0007
 
 OPTIMIZER_STR_TO_CLASS = {

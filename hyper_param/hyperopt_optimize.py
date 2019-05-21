@@ -2,14 +2,12 @@
 """Auto-optimizing a neural network with Hyperopt (TPE algorithm)."""
 
 
-from neural_net import build_and_train, build_model
-from optimize_cnn import optimize_cnn
-from utils import print_json, save_json_result, load_best_hyperspace
+from neural_net import build_model
+from utils import print_json, load_best_hyperspace
 
 from keras.utils import plot_model
 import keras.backend as K
 from hyperopt import hp, tpe
-from hyperopt import hp, tpe, fmin, Trials, STATUS_FAIL
 
 import traceback
 
@@ -128,6 +126,7 @@ def plot_best_model():
 
 def run_a_trial():
     """Run one TPE meta optimisation step and save its results."""
+    from optimize_cnn import optimize_cnn
 
     print("Attempt to resume a past training if it exists:")
     print("Running HyperTune...")
