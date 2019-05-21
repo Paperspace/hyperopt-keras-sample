@@ -9,6 +9,7 @@ from utils import print_json, save_json_result, load_best_hyperspace
 from keras.utils import plot_model
 import keras.backend as K
 from hyperopt import hp, tpe
+from hyperopt import hp, tpe, fmin, Trials, STATUS_FAIL
 
 import traceback
 

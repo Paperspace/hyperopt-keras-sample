@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  mongo_db:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+
+  hyperopt:
+    build:
+      context: ..
+      dockerfile: local_infra/Dockerfile
+    command: python test_hyperopt.py
+    depends_on:
+      - mongo_db
+
+  hyperopt_worker:
+    build:
+      context: ..
+      dockerfile: local_infra/Dockerfile
+    command: hyperopt-mongo-worker --mongo mongo_db:27017/foo_db --poll-interval=2.0 --exp-key=exp1
+    depends_on:
+      - mongo_db
