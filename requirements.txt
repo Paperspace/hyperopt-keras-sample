@@ -5,3 +5,4 @@ pydot
 pydot-ng
 scipy
 keras
+gradient-sdk
