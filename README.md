@@ -203,3 +203,14 @@ space_best_model = {
 <p align="center">
   <img src="model_best.png">
 </p>
+
+# To run it on local environment
+
+[Download](https://www.cs.toronto.edu/~kriz/cifar-100-python.tar.gz) dataset for model training and put it to `ml_req` folder with name `cifar-100-python.tar.gz`.
+
+Then from `local_infra` build and run with this commands:
+
+```bash
+docker-compose build
+docker-compose up
+```
