@@ -51,3 +51,7 @@ def load_best_hyperspace():
 
     best_result_name = results[-1]
     return load_json_result(best_result_name)["space"]
+
+
+def save_to_mongo(result):
+    print("Result: ", result)

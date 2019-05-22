@@ -47,6 +47,8 @@ OPTIMIZER_STR_TO_CLASS = {
 
 def build_and_train(hype_space, save_best_weights=False, log_for_tensorboard=False):
     """Build the deep CNN model and train it."""
+    print("start build and train\n")
+
     K.set_learning_phase(1)
     K.set_image_data_format('channels_last')
 
@@ -56,7 +58,7 @@ def build_and_train(hype_space, save_best_weights=False, log_for_tensorboard=Fal
     #     hype_space["batch_size"] = hype_space["batch_size"] / 10.0
 
     model = build_model(hype_space)
-
+    print("After build model")
     # K.set_learning_phase(1)
 
     model_uuid = str(uuid.uuid4())[:5]
@@ -161,7 +163,7 @@ def build_and_train(hype_space, save_best_weights=False, log_for_tensorboard=Fal
 
 def build_model(hype_space):
     """Create model according to the hyperparameter space given."""
-    print("Hyperspace:")
+    print("Hyperspace - build model:")
     print(hype_space)
 
     input_layer = keras.layers.Input(

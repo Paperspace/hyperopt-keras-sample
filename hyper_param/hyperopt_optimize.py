@@ -136,7 +136,7 @@ def run_a_trial():
         algo=tpe.suggest,
         max_evals=10
     )
-
+    print("Best: ", best)
     return best
 
 

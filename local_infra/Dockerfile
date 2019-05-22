@@ -10,3 +10,6 @@ RUN pip install -r requirements.txt
 COPY hyper_param/ .
 
 ENV PYTHONPATH=$PYTHONPATH:$(pwd)
+
+RUN mkdir -p /root/.keras/datasets
+COPY ml_req/cifar-100-python.tar.gz /root/.keras/datasets/
