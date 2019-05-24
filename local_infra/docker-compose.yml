@@ -15,6 +15,8 @@ services:
       - hks_mongo_db
     env_file:
       - ../.env
+    volumes:
+      - ../results:/hyper_param/results
 
   hks_hyperopt_worker:
     build:
@@ -25,3 +27,5 @@ services:
       - hks_mongo_db
     env_file:
       - ../.env
+    volumes:
+      - ../results:/hyper_param/results

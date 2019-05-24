@@ -135,7 +135,7 @@ def run_a_trial():
         optimize_cnn,
         space,
         algo=tpe.suggest,
-        max_evals=MAX_EVALS
+        max_evals=int(MAX_EVALS)
     )
     print("Best: ", best)
     return best
