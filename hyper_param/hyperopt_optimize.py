@@ -1,6 +1,6 @@
 
 """Auto-optimizing a neural network with Hyperopt (TPE algorithm)."""
-
+import os
 
 from neural_net import build_model
 from utils import print_json, load_best_hyperspace
@@ -13,6 +13,7 @@ import traceback
 
 from gradient_sdk.hyper_parameter import hyper_tune
 
+MAX_EVALS = os.environ.get('HKS_MAX_EVALS', 5)
 
 space = {
     # This loguniform scale will multiply the learning rate, so as to make
@@ -134,7 +135,7 @@ def run_a_trial():
         optimize_cnn,
         space,
         algo=tpe.suggest,
-        max_evals=10
+        max_evals=MAX_EVALS
     )
     print("Best: ", best)
     return best
