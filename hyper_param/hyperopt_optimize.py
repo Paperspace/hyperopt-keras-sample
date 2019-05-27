@@ -14,6 +14,8 @@ import traceback
 from gradient_sdk.hyper_parameter import hyper_tune
 
 MAX_EVALS = os.environ.get('HKS_MAX_EVALS', 5)
+PLOT_FOLDER_PATH = os.environ.get("HKS_PLOT_FOLDER_PATH", "")
+
 
 space = {
     # This loguniform scale will multiply the learning rate, so as to make
@@ -75,13 +77,16 @@ space = {
 
 def plot(hyperspace, file_name_prefix):
     """Plot a model from it's hyperspace."""
+    if PLOT_FOLDER_PATH:
+        filename = "{}/{}.png".format(PLOT_FOLDER_PATH, file_name_prefix)
+    else:
+        filename = "{}.png".format(file_name_prefix)
     model = build_model(hyperspace)
     plot_model(
         model,
-        to_file='/hyper_param/results/{}.png'.format(file_name_prefix),
+        to_file=filename,
         show_shapes=True
     )
-    print("Saved model visualization to {}.png.".format(file_name_prefix))
     K.clear_session()
     del model
 
