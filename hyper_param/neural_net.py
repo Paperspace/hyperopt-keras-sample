@@ -117,7 +117,6 @@ def build_and_train(hype_space, save_best_weights=False, log_for_tensorboard=Fal
         verbose=1,
         callbacks=callbacks,
         validation_data=([x_test], [y_test, y_test_coarse]),
-        steps_per_epoch=1000    # TODO: move it to os env
     ).history
 
     # Test net:

@@ -14,7 +14,6 @@ def optimize_cnn(hype_space):
     try:
         model, model_name, result, _ = build_and_train(hype_space)
         print("Training ended with success:")
-        print("Model dir: ", dir(model))
         print("Model name: ", model_name)
 
         # Save training results to disks with unique filenames

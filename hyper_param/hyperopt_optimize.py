@@ -78,7 +78,7 @@ def plot(hyperspace, file_name_prefix):
     model = build_model(hyperspace)
     plot_model(
         model,
-        to_file='{}.png'.format(file_name_prefix),
+        to_file='/hyper_param/results/{}.png'.format(file_name_prefix),
         show_shapes=True
     )
     print("Saved model visualization to {}.png.".format(file_name_prefix))
@@ -131,6 +131,7 @@ def run_a_trial():
 
     print("Attempt to resume a past training if it exists:")
     print("Running HyperTune...")
+    print("Max evals: ", MAX_EVALS)
     best = hyper_tune(
         optimize_cnn,
         space,

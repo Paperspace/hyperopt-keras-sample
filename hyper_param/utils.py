@@ -1,13 +1,12 @@
 
 """Json utils to print, save and load training results."""
 
-
 from bson import json_util
 import json
 import os
 
 
-RESULTS_DIR = "results/"
+RESULTS_DIR = os.environ.get("HKS_RESULT_DIR", "results")
 
 def print_json(result):
     """Pretty-print a jsonable structure (e.g.: result)."""
@@ -20,6 +19,8 @@ def print_json(result):
 
 def save_json_result(model_name, result):
     """Save json to a directory and a filename."""
+    print("Prepare to save best result")
+
     result_name = '{}.txt.json'.format(model_name)
     if not os.path.exists(RESULTS_DIR):
         os.makedirs(RESULTS_DIR)
@@ -29,6 +30,7 @@ def save_json_result(model_name, result):
             default=json_util.default, sort_keys=True,
             indent=4, separators=(',', ': ')
         )
+    print("Result save to json finished")
 
 
 def load_json_result(best_result_name):

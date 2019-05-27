@@ -16,7 +16,7 @@ services:
     env_file:
       - ../.env
     volumes:
-      - ../results:/hyper_param/results
+      - ../results/:/hyper_param/results/
 
   hks_hyperopt_worker:
     build:
@@ -28,4 +28,4 @@ services:
     env_file:
       - ../.env
     volumes:
-      - ../results:/hyper_param/results
+      - ../results/:/hyper_param/results/
