@@ -2,6 +2,8 @@
 """Auto-optimizing a neural network with Hyperopt (TPE algorithm)."""
 import os
 
+import keras
+
 from neural_net import build_model
 from utils import print_json, load_best_hyperspace
 
@@ -15,6 +17,7 @@ from gradient_sdk.hyper_parameter import hyper_tune
 
 MAX_EVALS = os.environ.get('HKS_MAX_EVALS', 5)
 PLOT_FOLDER_PATH = os.environ.get("HKS_PLOT_FOLDER_PATH", "")
+WORKING_ENVIRONMENT = os.environ.get("HKS_ENVIRONMENT", "paperspace")
 
 
 space = {
@@ -87,6 +90,14 @@ def plot(hyperspace, file_name_prefix):
         to_file=filename,
         show_shapes=True
     )
+
+    if WORKING_ENVIRONMENT == "paperspace":
+        model_path = "results/model"
+    else:
+        model_path = "{}/model".format(PLOT_FOLDER_PATH)
+
+    # TODO: export model with model_path
+
     K.clear_session()
     del model
 
