@@ -1,7 +1,10 @@
 CURRENT_DIR=$(shell pwd)
 HYPEROPT_DIR=$(CURRENT_DIR)/hyper_param
 
-install_req:
+install_graph_viz:
+	apt-get update && apt-get install -y graphviz
+
+install_req: install_graph_viz
 	pip install -r requirements.txt
 
 run_hyperopt: install_req
