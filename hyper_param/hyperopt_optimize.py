@@ -1,17 +1,23 @@
 
 """Auto-optimizing a neural network with Hyperopt (TPE algorithm)."""
+import os
 
+import keras
 
-from neural_net import build_and_train, build_model
-from utils import print_json, save_json_result, load_best_hyperspace
+from neural_net import build_model
+from utils import print_json, load_best_hyperspace
 
 from keras.utils import plot_model
 import keras.backend as K
-from hyperopt import hp, tpe, fmin, Trials
+from hyperopt import hp, tpe
 
-import pickle
-import os
 import traceback
+
+from gradient_sdk.hyper_parameter import hyper_tune
+
+MAX_EVALS = os.environ.get('HKS_MAX_EVALS', 5)
+PLOT_FOLDER_PATH = os.environ.get("HKS_PLOT_FOLDER_PATH", "")
+WORKING_ENVIRONMENT = os.environ.get("HKS_ENVIRONMENT", "paperspace")
 
 
 space = {
@@ -74,13 +80,24 @@ space = {
 
 def plot(hyperspace, file_name_prefix):
     """Plot a model from it's hyperspace."""
+    if PLOT_FOLDER_PATH:
+        filename = "{}/{}.png".format(PLOT_FOLDER_PATH, file_name_prefix)
+    else:
+        filename = "{}.png".format(file_name_prefix)
     model = build_model(hyperspace)
     plot_model(
         model,
-        to_file='{}.png'.format(file_name_prefix),
+        to_file=filename,
         show_shapes=True
     )
-    print("Saved model visualization to {}.png.".format(file_name_prefix))
+
+    if WORKING_ENVIRONMENT == "paperspace":
+        model_path = "results/model"
+    else:
+        model_path = "{}/model".format(PLOT_FOLDER_PATH)
+
+    # TODO: export model with model_path
+
     K.clear_session()
     del model
 
@@ -96,7 +113,6 @@ def plot_base_model():
         'conv_dropout_drop_proba': 0.175,
         'fc_dropout_drop_proba': 0.3,
         'use_BN': True,
-
         'first_conv': 4,
         'residual': 4,
         'conv_hiddn_units_mult': 1.0,
@@ -125,64 +141,21 @@ def plot_best_model():
     plot(space_best_model, "model_best")
 
 
-def optimize_cnn(hype_space):
-    """Build a convolutional neural network and train it."""
-    try:
-        model, model_name, result, _ = build_and_train(hype_space)
-
-        # Save training results to disks with unique filenames
-        save_json_result(model_name, result)
-
-        K.clear_session()
-        del model
-
-        return result
-
-    except Exception as err:
-        try:
-            K.clear_session()
-        except:
-            pass
-        err_str = str(err)
-        print(err_str)
-        traceback_str = str(traceback.format_exc())
-        print(traceback_str)
-        return {
-            'status': STATUS_FAIL,
-            'err': err_str,
-            'traceback': traceback_str
-        }
-
-    print("\n\n")
-
-
 def run_a_trial():
     """Run one TPE meta optimisation step and save its results."""
-    max_evals = nb_evals = 1
+    from optimize_cnn import optimize_cnn
 
     print("Attempt to resume a past training if it exists:")
-
-    try:
-        # https://github.com/hyperopt/hyperopt/issues/267
-        trials = pickle.load(open("results.pkl", "rb"))
-        print("Found saved Trials! Loading...")
-        max_evals = len(trials.trials) + nb_evals
-        print("Rerunning from {} trials to add another one.".format(
-            len(trials.trials)))
-    except:
-        trials = Trials()
-        print("Starting from scratch: new trials.")
-
-    best = fmin(
+    print("Running HyperTune...")
+    print("Max evals: ", MAX_EVALS)
+    best = hyper_tune(
         optimize_cnn,
         space,
         algo=tpe.suggest,
-        trials=trials,
-        max_evals=max_evals
+        max_evals=int(MAX_EVALS)
     )
-    pickle.dump(trials, open("results.pkl", "wb"))
-
-    print("\nOPTIMIZATION STEP COMPLETE.\n")
+    print("Best: ", best)
+    return best
 
 
 if __name__ == "__main__":
@@ -207,7 +180,9 @@ if __name__ == "__main__":
     # Optimize a new model with the TPE Algorithm:
     print("OPTIMIZING NEW MODEL:")
     try:
-        run_a_trial()
+        best = run_a_trial()
+        print(best)
+        print("\nOPTIMIZATION STEP COMPLETE.\n")
     except Exception as err:
         err_str = str(err)
         print(err_str)

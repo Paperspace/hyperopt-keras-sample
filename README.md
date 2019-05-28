@@ -203,3 +203,19 @@ space_best_model = {
 <p align="center">
   <img src="model_best.png">
 </p>
+
+# To run it on local environment
+
+[Download](https://www.cs.toronto.edu/~kriz/cifar-100-python.tar.gz) dataset for model training and put it to `ml_req` folder with name `cifar-100-python.tar.gz`.
+
+Then from `local_infra` build and run with this commands:
+
+```bash
+docker-compose build
+docker-compose up --scale hks_hyperopt_worker=2
+```
+
+Remember to run hyperopt worker with at least 2 nodes, that way hyperopt is working better (at least during tests with more worker nodes than 2 there were no issue with not saved evaluation result).
+
+**Important**
+Remember to set available RAM for docker on mac to at least 4GB (1 GB per docker with assumption to run 2 hyperopt workers).

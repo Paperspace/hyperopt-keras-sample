@@ -8,10 +8,9 @@ from keras.datasets import cifar100  # from keras.datasets import cifar10
 from keras.layers.core import K  # import keras.backend as K
 from keras.optimizers import Adam, Nadam, RMSprop
 import tensorflow as tf
-from hyperopt import STATUS_OK, STATUS_FAIL
+from hyperopt import STATUS_OK
 
 import uuid
-import traceback
 import os
 
 
@@ -36,7 +35,7 @@ y_train_c = keras.utils.to_categorical(y_train_c, NB_CLASSES_COARSE)
 y_test_coarse = keras.utils.to_categorical(y_test_coarse, NB_CLASSES_COARSE)
 
 # You may want to reduce this considerably if you don't have a killer GPU:
-EPOCHS = 100
+EPOCHS = int(os.environ.get('HKS_EPOCHS', 100))
 STARTING_L2_REG = 0.0007
 
 OPTIMIZER_STR_TO_CLASS = {
@@ -48,6 +47,8 @@ OPTIMIZER_STR_TO_CLASS = {
 
 def build_and_train(hype_space, save_best_weights=False, log_for_tensorboard=False):
     """Build the deep CNN model and train it."""
+    print("start build and train\n")
+
     K.set_learning_phase(1)
     K.set_image_data_format('channels_last')
 
@@ -57,7 +58,7 @@ def build_and_train(hype_space, save_best_weights=False, log_for_tensorboard=Fal
     #     hype_space["batch_size"] = hype_space["batch_size"] / 10.0
 
     model = build_model(hype_space)
-
+    print("After build model")
     # K.set_learning_phase(1)
 
     model_uuid = str(uuid.uuid4())[:5]
@@ -115,7 +116,7 @@ def build_and_train(hype_space, save_best_weights=False, log_for_tensorboard=Fal
         shuffle=True,
         verbose=1,
         callbacks=callbacks,
-        validation_data=([x_test], [y_test, y_test_coarse])
+        validation_data=([x_test], [y_test, y_test_coarse]),
     ).history
 
     # Test net:
@@ -162,7 +163,7 @@ def build_and_train(hype_space, save_best_weights=False, log_for_tensorboard=Fal
 
 def build_model(hype_space):
     """Create model according to the hyperparameter space given."""
-    print("Hyperspace:")
+    print("Hyperspace - build model:")
     print(hype_space)
 
     input_layer = keras.layers.Input(

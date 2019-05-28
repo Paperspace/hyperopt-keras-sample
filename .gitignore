@@ -102,3 +102,9 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+
+model_best.png
+model_demo.png
+ml_req/cifar-100-python.tar.gz
+results/*
