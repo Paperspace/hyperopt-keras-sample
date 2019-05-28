@@ -2,10 +2,10 @@
 """Auto-optimizing a neural network with Hyperopt (TPE algorithm)."""
 import os
 
-import keras
+import tensorflow as tf
 
 from neural_net import build_model
-from utils import print_json, load_best_hyperspace
+from utils import load_best_hyperspace, is_gpu_available, print_json
 
 from keras.utils import plot_model
 import keras.backend as K
@@ -133,10 +133,10 @@ def plot_best_model():
     """Plot the best model found yet."""
     space_best_model = load_best_hyperspace()
     if space_best_model is None:
-        print("No best model to plot. Continuing...")
+        tf.logging.info("No best model to plot. Continuing...")
         return
 
-    print("Best hyperspace yet:")
+    tf.logging.info("Best hyperspace yet:")
     print_json(space_best_model)
     plot(space_best_model, "model_best")
 
@@ -144,51 +144,56 @@ def plot_best_model():
 def run_a_trial():
     """Run one TPE meta optimisation step and save its results."""
     from optimize_cnn import optimize_cnn
-
-    print("Attempt to resume a past training if it exists:")
-    print("Running HyperTune...")
-    print("Max evals: ", MAX_EVALS)
+    
+    tf.logging.info("Attempt to resume a past training if it exists:")
+    tf.logging.info("Running HyperTune...")
+    tf.logging.info("Max evals: {}".format(MAX_EVALS))
     best = hyper_tune(
         optimize_cnn,
         space,
         algo=tpe.suggest,
         max_evals=int(MAX_EVALS)
     )
-    print("Best: ", best)
+    tf.logging.info("Best: ", best)
     return best
 
 
 if __name__ == "__main__":
     """Plot the model and run the optimisation forever (and saves results)."""
 
-    print("Plotting a demo model that would represent "
+    tf.logging.set_verbosity(tf.logging.DEBUG)
+
+    if not is_gpu_available():
+        tf.logging.warning('GPUs are not available')
+
+    tf.logging.info("Plotting a demo model that would represent "
           "a quite normal model (or a bit more huge), "
           "and then the best model...")
 
     plot_base_model()
 
-    print("Now, we train many models, one after the other. "
+    tf.logging.info("Now, we train many models, one after the other. "
           "Note that hyperopt has support for cloud "
           "distributed training using MongoDB.")
 
-    print("\nYour results will be saved in the folder named 'results/'. "
+    tf.logging.info("\nYour results will be saved in the folder named 'results/'. "
           "You can sort that alphabetically and take the greatest one. "
           "As you run the optimization, results are consinuously saved into a "
           "'results.pkl' file, too. Re-running optimize.py will resume "
           "the meta-optimization.\n")
 
     # Optimize a new model with the TPE Algorithm:
-    print("OPTIMIZING NEW MODEL:")
+    tf.logging.info("OPTIMIZING NEW MODEL:")
     try:
         best = run_a_trial()
-        print(best)
-        print("\nOPTIMIZATION STEP COMPLETE.\n")
+        tf.logging.info(best)
+        tf.logging.info("\nOPTIMIZATION STEP COMPLETE.\n")
     except Exception as err:
         err_str = str(err)
-        print(err_str)
+        tf.logging.info(err_str)
         traceback_str = str(traceback.format_exc())
-        print(traceback_str)
+        tf.logging.info(traceback_str)
 
     # Replot best model since it may have changed:
-    print("PLOTTING BEST MODEL:")
+    tf.logging.info("PLOTTING BEST MODEL:")
     plot_best_model()

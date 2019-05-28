@@ -1,12 +1,23 @@
 
 """Json utils to print, save and load training results."""
-
+import tensorflow
+from tensorflow.python.client import device_lib
 from bson import json_util
 import json
 import os
 
 
 RESULTS_DIR = os.environ.get("HKS_RESULT_DIR", "results")
+
+
+def is_gpu_available():
+    return tensorflow.test.is_gpu_available()
+
+
+def get_available_gpus():
+    local_device_protos = device_lib.list_local_devices()
+    return [x.name for x in local_device_protos if x.device_type == 'GPU']
+
 
 def print_json(result):
     """Pretty-print a jsonable structure (e.g.: result)."""
