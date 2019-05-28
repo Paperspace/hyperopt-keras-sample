@@ -22,7 +22,7 @@ services:
     build:
       context: ..
       dockerfile: local_infra/Dockerfile
-    command: hyperopt-mongo-worker --mongo hks_mongo_db:27017/testing --exp-key=testing --last-job-timeout=120 --reserve-timeout=600
+    command: hyperopt-mongo-worker --mongo hks_mongo_db:27017/testing --exp-key=testing --last-job-timeout=30
     depends_on:
       - hks_mongo_db
     env_file:
