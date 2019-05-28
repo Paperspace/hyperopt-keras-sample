@@ -219,3 +219,33 @@ Remember to run hyperopt worker with at least 2 nodes, that way hyperopt is work
 
 **Important**
 Remember to set available RAM for docker on mac to at least 4GB (1 GB per docker with assumption to run 2 hyperopt workers).
+
+# To run it on Paperspace
+
+## API call
+
+Make POST call to url: `https://services.paperspace.io/experiments/v1/hyperopt/create_and_start/`
+
+With this call send headers:
+- `x-api-key=<provide_yout_api_key>`
+- `Content-Type=application/json`
+
+Example json:
+```json
+{
+    "name": "<your-experiment-name>",
+    "tuningCommand": "make run_hyperopt",
+    "workerCommand": "make run_hyperopt_worker",
+    "workerContainer": "tensorflow/tensorflow:1.13.1-gpu-py3",
+    "workerMachineType": "K80",
+    "workerCount": 2,
+    "projectHandle": "<project_handle>",
+    "workspaceUrl": "git+https://github.com/Paperspace/hyperopt-keras-sample",
+    "experimentEnv": {
+        "HKS_EPOCHS": 1,
+		"HKS_MAX_EVALS": 2
+    }
+}
+```
+
+## CLI command
