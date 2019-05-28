@@ -1,13 +1,14 @@
 
 """Json utils to print, save and load training results."""
 import tensorflow
+from gradient_sdk import model_dir
 from tensorflow.python.client import device_lib
 from bson import json_util
 import json
 import os
 
-
-RESULTS_DIR = os.environ.get("HKS_RESULT_DIR", "results")
+EXPERIMENT_NAME = os.environ.get('EXPERIMENT_NAME')
+RESULTS_DIR = model_dir(EXPERIMENT_NAME)
 
 
 def is_gpu_available():
