@@ -1,8 +1,7 @@
 
 """Convolutional neural network built with Keras."""
 
-from utils import print_json
-
+import tensorflow as tf
 import keras
 from keras.datasets import cifar100  # from keras.datasets import cifar10
 from keras.layers.core import K  # import keras.backend as K
@@ -13,6 +12,7 @@ from hyperopt import STATUS_OK
 import uuid
 import os
 
+from utils import print_json
 
 TENSORBOARD_DIR = "TensorBoard/"
 WEIGHTS_DIR = "weights/"
@@ -47,7 +47,7 @@ OPTIMIZER_STR_TO_CLASS = {
 
 def build_and_train(hype_space, save_best_weights=False, log_for_tensorboard=False):
     """Build the deep CNN model and train it."""
-    print("start build and train\n")
+    tf.logging.info("start build and train\n")
 
     K.set_learning_phase(1)
     K.set_image_data_format('channels_last')
@@ -58,7 +58,7 @@ def build_and_train(hype_space, save_best_weights=False, log_for_tensorboard=Fal
     #     hype_space["batch_size"] = hype_space["batch_size"] / 10.0
 
     model = build_model(hype_space)
-    print("After build model")
+    tf.logging.info("After build model")
     # K.set_learning_phase(1)
 
     model_uuid = str(uuid.uuid4())[:5]
@@ -69,7 +69,7 @@ def build_and_train(hype_space, save_best_weights=False, log_for_tensorboard=Fal
     if save_best_weights:
         weights_save_path = os.path.join(
             WEIGHTS_DIR, '{}.hdf5'.format(model_uuid))
-        print("Model's weights will be saved to: {}".format(weights_save_path))
+        tf.logging.info("Model's weights will be saved to: {}".format(weights_save_path))
         if not os.path.exists(WEIGHTS_DIR):
             os.makedirs(WEIGHTS_DIR)
 
@@ -82,7 +82,7 @@ def build_and_train(hype_space, save_best_weights=False, log_for_tensorboard=Fal
     log_path = None
     if log_for_tensorboard:
         log_path = os.path.join(TENSORBOARD_DIR, model_uuid)
-        print("Tensorboard log files will be saved to: {}".format(log_path))
+        tf.logging.info("Tensorboard log files will be saved to: {}".format(log_path))
         if not os.path.exists(log_path):
             os.makedirs(log_path)
 
@@ -125,14 +125,14 @@ def build_and_train(hype_space, save_best_weights=False, log_for_tensorboard=Fal
     max_acc = max(history['val_fine_outputs_acc'])
 
     model_name = "model_{}_{}".format(str(max_acc), str(uuid.uuid4())[:5])
-    print("Model name: {}".format(model_name))
+    tf.logging.info("Model name: {}".format(model_name))
 
     # Note: to restore the model, you'll need to have a keras callback to
     # save the best weights and not the final weights. Only the result is
     # saved.
-    print(history.keys())
-    print(history)
-    print(score)
+    tf.logging.debug(history.keys())
+    tf.logging.debug(history)
+    tf.logging.info(score)
     result = {
         # We plug "-val_fine_outputs_acc" as a
         # minimizing metric named 'loss' by Hyperopt.
@@ -155,7 +155,7 @@ def build_and_train(hype_space, save_best_weights=False, log_for_tensorboard=Fal
         'status': STATUS_OK
     }
 
-    print("RESULT:")
+    tf.logging.info("RESULT:")
     print_json(result)
 
     return model, model_name, result, log_path
@@ -163,8 +163,8 @@ def build_and_train(hype_space, save_best_weights=False, log_for_tensorboard=Fal
 
 def build_model(hype_space):
     """Create model according to the hyperparameter space given."""
-    print("Hyperspace - build model:")
-    print(hype_space)
+    tf.logging.info("Hyperspace - build model:")
+    tf.logging.info(hype_space)
 
     input_layer = keras.layers.Input(
         (IMAGE_BORDER_LENGTH, IMAGE_BORDER_LENGTH, NB_CHANNELS))
@@ -184,23 +184,23 @@ def build_model(hype_space):
     # residual connections and other fluffs:
     n_filters = int(40 * hype_space['conv_hiddn_units_mult'])
     for i in range(hype_space['nb_conv_pool_layers']):
-        print(i)
-        print(n_filters)
-        print(current_layer._keras_shape)
+        tf.logging.info(i)
+        tf.logging.info(n_filters)
+        tf.logging.info(current_layer._keras_shape)
 
         current_layer = convolution(current_layer, n_filters, hype_space)
         if hype_space['use_BN']:
             current_layer = bn(current_layer)
-        print(current_layer._keras_shape)
+        tf.logging.info(current_layer._keras_shape)
 
         deep_enough_for_res = hype_space['conv_pool_res_start_idx']
         if i >= deep_enough_for_res and hype_space['residual'] is not None:
             current_layer = residual(current_layer, n_filters, hype_space)
-            print(current_layer._keras_shape)
+            tf.logging.info(current_layer._keras_shape)
 
         current_layer = auto_choose_pooling(
             current_layer, n_filters, hype_space)
-        print(current_layer._keras_shape)
+        tf.logging.info(current_layer._keras_shape)
 
         current_layer = dropout(current_layer, hype_space)
 
@@ -208,7 +208,7 @@ def build_model(hype_space):
 
     # Fully Connected (FC) part:
     current_layer = keras.layers.core.Flatten()(current_layer)
-    print(current_layer._keras_shape)
+    tf.logging.info(current_layer._keras_shape)
 
     current_layer = keras.layers.core.Dense(
         units=int(1000 * hype_space['fc_units_1_mult']),
@@ -216,7 +216,7 @@ def build_model(hype_space):
         kernel_regularizer=keras.regularizers.l2(
             STARTING_L2_REG * hype_space['l2_weight_reg_mult'])
     )(current_layer)
-    print(current_layer._keras_shape)
+    tf.logging.info(current_layer._keras_shape)
 
     current_layer = dropout(
         current_layer, hype_space, for_convolution_else_fc=False)
@@ -228,7 +228,7 @@ def build_model(hype_space):
             kernel_regularizer=keras.regularizers.l2(
                 STARTING_L2_REG * hype_space['l2_weight_reg_mult'])
         )(current_layer)
-        print(current_layer._keras_shape)
+        tf.logging.info(current_layer._keras_shape)
 
         current_layer = dropout(
             current_layer, hype_space, for_convolution_else_fc=False)
