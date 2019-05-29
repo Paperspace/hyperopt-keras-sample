@@ -1,7 +1,6 @@
 
 """Convolutional neural network built with Keras."""
 
-import tensorflow as tf
 import keras
 from keras.datasets import cifar100  # from keras.datasets import cifar10
 from keras.layers.core import K  # import keras.backend as K
@@ -52,10 +51,10 @@ def build_and_train(hype_space, save_best_weights=False, log_for_tensorboard=Fal
     K.set_learning_phase(1)
     K.set_image_data_format('channels_last')
 
-    # if log_for_tensorboard:
-    #     # We need a smaller batch size to not blow memory with tensorboard
-    #     hype_space["lr_rate_mult"] = hype_space["lr_rate_mult"] / 10.0
-    #     hype_space["batch_size"] = hype_space["batch_size"] / 10.0
+    if log_for_tensorboard:
+        # We need a smaller batch size to not blow memory with tensorboard
+        hype_space["lr_rate_mult"] = hype_space["lr_rate_mult"] / 10.0
+        hype_space["batch_size"] = hype_space["batch_size"] / 10.0
 
     model = build_model(hype_space)
     tf.logging.info("After build model")
