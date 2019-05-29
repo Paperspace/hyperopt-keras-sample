@@ -17,7 +17,7 @@ def optimize_cnn(hype_space):
     try:
         model, model_name, result, _ = build_and_train(hype_space)
         tf.logging.info("Training ended with success:")
-        tf.logging.info("Model name: ", model_name)
+        tf.logging.info("Model name: %s", model_name)
 
         # Save training results to disks with unique filenames
         # TODO do we need this? this save to json on disc not to mongo. Not sure if we want always save to disc
