@@ -146,14 +146,14 @@ def run_a_trial():
     
     tf.logging.info("Attempt to resume a past training if it exists:")
     tf.logging.info("Running HyperTune...")
-    tf.logging.info("Max evals: {}".format(MAX_EVALS))
+    tf.logging.info("Max evals: %s", MAX_EVALS)
     best = hyper_tune(
         optimize_cnn,
         space,
         algo=tpe.suggest,
         max_evals=int(MAX_EVALS)
     )
-    tf.logging.info("Best: ", best)
+    tf.logging.info("Best: %s", best)
     return best
 
 
