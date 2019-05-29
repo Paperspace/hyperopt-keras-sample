@@ -13,4 +13,4 @@ ENV PYTHONPATH=$PYTHONPATH:$(pwd)
 
 RUN mkdir -p /root/.keras/datasets && mkdir results
 
-COPY ml_req/cifar-100-python.tar.gz /root/.keras/datasets/
+COPY ml_req/* /root/.keras/datasets/
