@@ -3,7 +3,7 @@ from tensorflow.python.saved_model import builder as saved_model_builder, tag_co
 from tensorflow.python.saved_model.signature_def_utils_impl import predict_signature_def
 
 from neural_net import build_and_train
-from utils import save_json_result
+from utils import save_json_result, is_gpu_available
 import tensorflow as tf
 import keras.backend as K
 from hyperopt import STATUS_FAIL
@@ -11,6 +11,9 @@ from hyperopt import STATUS_FAIL
 
 def optimize_cnn(hype_space):
     """Build a convolutional neural network and train it."""
+    if not is_gpu_available():
+        tf.logging.warning('GPUs are not available')
+
     tf.logging.debug("Hyperspace: ", hype_space)
     tf.logging.debug("\n")
     try:
