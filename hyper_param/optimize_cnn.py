@@ -28,9 +28,7 @@ def optimize_cnn(hype_space):
         save_json_result(model_name, result)
 
         # Export Model
-        #K.set_learning_phase(0)
-        #saved_model = model.save('results/model.h5')
-        builder = saved_model_builder.SavedModelBuilder('results')
+        builder = saved_model_builder.SavedModelBuilder('models')
 
         # TODO FIX THIS
         signature = predict_signature_def(inputs={'images': model.input},
