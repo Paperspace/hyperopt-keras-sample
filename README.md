@@ -252,7 +252,7 @@ Example json:
 
 Assuming that you have configured API Key for paperspace cli type:
 ```bash
-paperspace-python hyperparameter createAndStart --name HyperoptKerasExperimentCLI1 --projectId pr165jx3a --tuningCommand 'make run_hyperopt' --workerContainer tensorflow/tensorflow:1.13.1-gpu-py3 --workerMachineType K80 --workerCommand 'make run_hyperopt_worker' --workerCount 2                                       
+paperspace-python hyperparameter createAndStart --name HyperoptKerasExperimentCLI1 --projectId pr165jx3a --tuningCommand 'make run_hyperopt' --workerContainer tensorflow/tensorflow:1.13.1-gpu-py3 --workerMachineType K80 --workerCommand 'make run_hyperopt_worker' --workerCount 2 --workspaceUrl git+https://github.com/Paperspace/hyperopt-keras-sample
 ```
 
 _For now there is no option to pass `experimentEnv` json to start hyperparameter with specific ENV values_
