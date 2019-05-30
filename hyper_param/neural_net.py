@@ -19,11 +19,9 @@ WEIGHTS_DIR = "weights/"
 
 NB_CHANNELS = 3
 IMAGE_BORDER_LENGTH = 32
-# NB_CLASSES = 10
 NB_CLASSES_FINE = 100
 NB_CLASSES_COARSE = 20
 
-# (x_train, y_train), (x_test, y_test) = cifar10.load_data()
 (_, y_train_c), (_, y_test_coarse) = cifar100.load_data(label_mode='coarse')
 (x_train, y_train), (x_test, y_test) = cifar100.load_data(label_mode='fine')
 x_train = x_train.astype('float32') / 255.0 - 0.5
@@ -58,7 +56,6 @@ def build_and_train(hype_space, save_best_weights=False, log_for_tensorboard=Fal
 
     model = build_model(hype_space)
     tf.logging.info("After build model")
-    # K.set_learning_phase(1)
 
     model_uuid = str(uuid.uuid4())[:5]
 
@@ -85,23 +82,10 @@ def build_and_train(hype_space, save_best_weights=False, log_for_tensorboard=Fal
         if not os.path.exists(log_path):
             os.makedirs(log_path)
 
-        # Right now Keras's TensorBoard callback and TensorBoard itself are not
-        # properly documented so we do not save embeddings (e.g.: for T-SNE).
-
-        # embeddings_metadata = {
-        #     # Dense layers only:
-        #     l.name: "../10000_test_classes_labels_on_1_row_in_plain_text.tsv"
-        #     for l in model.layers if 'dense' in l.name.lower()
-        # }
-
         tb_callback = keras.callbacks.TensorBoard(
             log_dir=log_path,
             histogram_freq=2,
-            # write_images=True, # Enabling this line would require more than 5 GB at each `histogram_freq` epoch.
             write_graph=True
-            # embeddings_freq=3,
-            # embeddings_layer_names=list(embeddings_metadata.keys()),
-            # embeddings_metadata=embeddings_metadata
         )
         tb_callback.set_model(model)
         callbacks.append(tb_callback)

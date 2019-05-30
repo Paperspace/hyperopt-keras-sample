@@ -3,6 +3,7 @@
 import os
 
 import tensorflow as tf
+from gradient_sdk import model_dir
 
 from neural_net import build_model
 from utils import load_best_hyperspace, is_gpu_available, print_json
@@ -16,8 +17,9 @@ import traceback
 from gradient_sdk.hyper_parameter import hyper_tune
 
 MAX_EVALS = os.environ.get('HKS_MAX_EVALS', 5)
-PLOT_FOLDER_PATH = os.environ.get("HKS_PLOT_FOLDER_PATH", "")
-WORKING_ENVIRONMENT = os.environ.get("HKS_ENVIRONMENT", "paperspace")
+EXPERIMENT_NAME = os.environ.get('EXPERIMENT_NAME')
+PLOT_FOLDER_PATH = model_dir(EXPERIMENT_NAME)
+WORKING_ENVIRONMENT = os.environ.get('HKS_ENVIRONMENT', 'paperspace')
 
 
 space = {
@@ -81,6 +83,8 @@ space = {
 def plot(hyperspace, file_name_prefix):
     """Plot a model from it's hyperspace."""
     if PLOT_FOLDER_PATH:
+        if not os.path.exists(PLOT_FOLDER_PATH):
+            os.makedirs(PLOT_FOLDER_PATH)
         filename = "{}/{}.png".format(PLOT_FOLDER_PATH, file_name_prefix)
     else:
         filename = "{}.png".format(file_name_prefix)
@@ -90,11 +94,6 @@ def plot(hyperspace, file_name_prefix):
         to_file=filename,
         show_shapes=True
     )
-
-    if WORKING_ENVIRONMENT == "paperspace":
-        model_path = "results/model"
-    else:
-        model_path = "{}/model".format(PLOT_FOLDER_PATH)
 
     # TODO: export model with model_path
 
@@ -147,14 +146,14 @@ def run_a_trial():
     
     tf.logging.info("Attempt to resume a past training if it exists:")
     tf.logging.info("Running HyperTune...")
-    tf.logging.info("Max evals: {}".format(MAX_EVALS))
+    tf.logging.info("Max evals: %s", MAX_EVALS)
     best = hyper_tune(
         optimize_cnn,
         space,
         algo=tpe.suggest,
         max_evals=int(MAX_EVALS)
     )
-    tf.logging.info("Best: ", best)
+    tf.logging.info("Best: %s", best)
     return best
 
 
