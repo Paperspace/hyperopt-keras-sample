@@ -204,30 +204,53 @@ space_best_model = {
   <img src="model_best.png">
 </p>
 
-# To run it on local environment
+# To run it on a local environment
 
 [Download](https://www.cs.toronto.edu/~kriz/cifar-100-python.tar.gz) dataset for model training and put it to `ml_req` folder with name `cifar-100-python.tar.gz`.
 
-Then from `local_infra` build and run with this commands:
+Then from `local_infra` build and run with these commands:
 
 ```bash
 docker-compose build
 docker-compose up --scale hks_hyperopt_worker=2
 ```
 
-Remember to run hyperopt worker with at least 2 nodes, that way hyperopt is working better (at least during tests with more worker nodes than 2 there were no issue with not saved evaluation result).
+Note: you should run hyperopt with at least 2 worker nodes for better reliability. (You might experience issues with unsaved evaluation results when running with a single worker node.)
 
 **Important**
 Remember to set available RAM for docker on mac to at least 4GB (1 GB per docker with assumption to run 2 hyperopt workers).
 
 # To run it on Paperspace
 
-## API call
+## Using the paperspace-python CLI
 
-Make POST call to url: `https://services.paperspace.io/experiments/v1/hyperopt/create_and_start/`
+Assuming that you have configured an API Key for the paperspace cli enter:
+```bash
+paperspace-python hyperparameter createAndStart \
+  --name HyperoptKerasExperimentCLI1 \
+  --projectId <your-project-id> \
+  --tuningCommand 'make run_hyperopt' \
+  --workerContainer tensorflow/tensorflow:1.13.1-gpu-py3 \
+  --workerMachineType K80 \
+  --workerCommand 'make run_hyperopt_worker' 
+  --workerCount 2 \
+  --workspaceUrl git+https://github.com/Paperspace/hyperopt-keras-sample
+```
+
+On successfully creating a hyperparameter experiment it should return something like this:
+```
+Hyperparameter created with ID: <experiment_id> and started
+```
+
+_Note: currently there not a CLI option to pass `experimentEnv` json to start hyperparameter with specific ENV values.  However this functionality is available via the `/hyperopt/create_and_start` HTTP API call._
+
+
+## Using the Paperspace Public API
+
+Make a POST call to url: `https://services.paperspace.io/experiments/v1/hyperopt/create_and_start/`
 
 With this call send headers:
-- `x-api-key=<provide_yout_api_key>`
+- `x-api-key=<your-api-key>`
 - `Content-Type=application/json`
 
 Example json:
@@ -239,25 +262,11 @@ Example json:
     "workerContainer": "tensorflow/tensorflow:1.13.1-gpu-py3",
     "workerMachineType": "K80",
     "workerCount": 2,
-    "projectHandle": "<project_handle>",
+    "projectHandle": "<your-project-id>",
     "workspaceUrl": "git+https://github.com/Paperspace/hyperopt-keras-sample",
     "experimentEnv": {
         "HKS_EPOCHS": 1,
 		"HKS_MAX_EVALS": 2
     }
 }
-```
-
-## CLI command
-
-Assuming that you have configured API Key for paperspace cli type:
-```bash
-paperspace-python hyperparameter createAndStart --name HyperoptKerasExperimentCLI1 --projectId pr165jx3a --tuningCommand 'make run_hyperopt' --workerContainer tensorflow/tensorflow:1.13.1-gpu-py3 --workerMachineType K80 --workerCommand 'make run_hyperopt_worker' --workerCount 2 --workspaceUrl git+https://github.com/Paperspace/hyperopt-keras-sample
-```
-
-_For now there is no option to pass `experimentEnv` json to start hyperparameter with specific ENV values_
-
-If everything went without problem it should return something like this:
-```
-Hyperparameter created with ID: <experiment_id> and started
 ```
