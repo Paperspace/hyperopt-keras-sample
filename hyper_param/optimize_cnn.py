@@ -28,14 +28,21 @@ def optimize_cnn(hype_space):
         # Export Model
         builder = saved_model_builder.SavedModelBuilder('models')
 
-        # TODO FIX THIS
-        signature = predict_signature_def(inputs={'images': model.input},
-                                          outputs={'scores': model.output})
-        with K.get_session() as sess:
-            builder.add_meta_graph_and_variables(sess=sess,
-                                                 tags=[tag_constants.SERVING],
-                                                 signature_def_map={'predict': signature})
-            builder.save()
+        try:
+            # TODO FIX THIS
+            signature = predict_signature_def(inputs={'images': model.input},
+                                              outputs={'scores': model.output})
+            with K.get_session() as sess:
+                builder.add_meta_graph_and_variables(sess=sess,
+                                                     tags=[tag_constants.SERVING],
+                                                     signature_def_map={'predict': signature})
+                builder.save()
+        except:
+            print('builder się wykorbił')
+
+        
+        model.save('model.h5')
+
         K.clear_session()
         del model
         tf.logging.info('before return result')

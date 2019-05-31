@@ -10,7 +10,7 @@ from utils import load_best_hyperspace, is_gpu_available, print_json
 
 from keras.utils import plot_model
 import keras.backend as K
-from hyperopt import hp, tpe
+from hyperopt import hp, tpe, fmin
 
 import traceback
 
@@ -147,7 +147,7 @@ def run_a_trial():
     tf.logging.info("Attempt to resume a past training if it exists:")
     tf.logging.info("Running HyperTune...")
     tf.logging.info("Max evals: %s", MAX_EVALS)
-    best = hyper_tune(
+    best = fmin(
         optimize_cnn,
         space,
         algo=tpe.suggest,
