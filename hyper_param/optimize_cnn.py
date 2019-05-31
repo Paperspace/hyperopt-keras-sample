@@ -37,10 +37,10 @@ def optimize_cnn(hype_space):
                                                      tags=[tag_constants.SERVING],
                                                      signature_def_map={'predict': signature})
                 builder.save()
-        except:
+        except Exception as e:
             print('builder się wykorbił')
 
-        
+
         model.save('model.h5')
 
         K.clear_session()
