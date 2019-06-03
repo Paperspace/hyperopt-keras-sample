@@ -1,4 +1,7 @@
+import os
 import traceback
+import time
+
 from tensorflow.python.saved_model import builder as saved_model_builder, tag_constants
 from tensorflow.python.saved_model.signature_def_utils_impl import predict_signature_def
 
@@ -25,23 +28,47 @@ def optimize_cnn(hype_space):
         # Save training results to disks with unique filenames
         save_json_result(model_name, result)
 
-        # Export Model
-        builder = saved_model_builder.SavedModelBuilder('models')
-
         try:
+            # Export Model
+            export_dir = os.path.join('models', time.strftime("%Y%m%d-%H%M%S"), '1')
+            builder = saved_model_builder.SavedModelBuilder(export_dir)
+
+            try:
+                model.save('model.h5')
+                tf.keras.backend.set_learning_phase(0)
+                try:
+                    model = tf.keras.models.load_model('model.h5')
+                except:
+                    pass
+
+                with tf.keras.backend.get_session() as sess:
+                    tf.saved_model.simple_save(
+                        sess,
+                        export_dir,
+                        inputs={'input_image': model.input},
+                        outputs={t.name: t for t in model.outputs})
+            except Exception as e2:
+                print(e2)
+
+
             # TODO FIX THIS
-            signature = predict_signature_def(inputs={'images': model.input},
-                                              outputs={'scores': model.output})
+            try:
+                # model_inputs = tf.saved_model.utils.build_tensor_info(model.inputs)
+                # model_outputs = tf.saved_model.utils.build_tensor_info(model.outputs)
+
+                signature = predict_signature_def(inputs={'images': model.inputs},
+                                                  outputs={'scores': model.outputs})
+            except Exception as e1:
+                print(e1)
+
             with K.get_session() as sess:
                 builder.add_meta_graph_and_variables(sess=sess,
                                                      tags=[tag_constants.SERVING],
-                                                     signature_def_map={'predict': signature})
+                                                     signature_def_map={'predict': signature}
+                                                     )
                 builder.save()
         except Exception as e:
             print('builder się wykorbił')
-
-
-        model.save('model.h5')
 
         K.clear_session()
         del model
