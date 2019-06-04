@@ -6,6 +6,8 @@ WORKDIR hyper_param
 
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
+RUN sudo ln -s /usr/local/cuda/lib64/stubs/libcuda.so /usr/local/cuda/lib64/stubs/libcuda.so.1
+ENV LD_LIBRARY_PATH="/usr/local/cuda/lib64/stubs/:$LD_LIBRARY_PATH"
 
 COPY hyper_param/ .
 
