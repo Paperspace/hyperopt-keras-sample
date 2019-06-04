@@ -30,7 +30,7 @@ def optimize_cnn(hype_space):
 
         try:
             # Export Model
-            export_dir = os.path.join('models', time.strftime("%Y%m%d-%H%M%S"), '1')
+            export_dir = os.path.abspath(os.environ.get('PS_MODEL_PATH', os.getcwd() + os.path.join('models', time.strftime("%Y%m%d-%H%M%S"), '1')))
             K.set_learning_phase(0)
 
             builder = saved_model_builder.SavedModelBuilder(export_dir)
