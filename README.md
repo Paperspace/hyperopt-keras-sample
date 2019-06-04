@@ -226,7 +226,7 @@ Remember to set available RAM for docker on mac to at least 4GB (1 GB per docker
 
 Assuming that you have configured an API Key for the paperspace cli enter:
 ```bash
-paperspace-python hyperparameter createAndStart \
+paperspace-python hyperparameters createAndStart \
   --name HyperoptKerasExperimentCLI1 \
   --projectId <your-project-id> \
   --tuningCommand 'make run_hyperopt' \
@@ -262,7 +262,7 @@ Example json:
     "workerContainer": "tensorflow/tensorflow:1.13.1-gpu-py3",
     "workerMachineType": "K80",
     "workerCount": 2,
-    "projectHandle": "<your-project-id>",
+    "projectId": "<your-project-id>",
     "workspaceUrl": "git+https://github.com/Paperspace/hyperopt-keras-sample",
     "experimentEnv": {
         "HKS_EPOCHS": 1,
