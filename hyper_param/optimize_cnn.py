@@ -41,7 +41,7 @@ def optimize_cnn(hype_space):
                                                      )
                 builder.save()
         except Exception as e:
-            print('Model export has failed')
+            print('Model export has failed with error: {}'.format(e))
 
         K.clear_session()
         del model
@@ -49,11 +49,6 @@ def optimize_cnn(hype_space):
         return result
 
     except Exception as err:
-        try:
-            K.clear_session()
-        except Exception as e3:
-            print(e3)
-
         err_str = str(err)
         tf.logging.error(err_str)
         traceback_str = str(traceback.format_exc())
