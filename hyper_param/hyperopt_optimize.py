@@ -95,8 +95,6 @@ def plot(hyperspace, file_name_prefix):
         show_shapes=True
     )
 
-    # TODO: export model with model_path
-
     K.clear_session()
     del model
 
@@ -147,7 +145,7 @@ def run_a_trial():
     tf.logging.info("Attempt to resume a past training if it exists:")
     tf.logging.info("Running HyperTune...")
     tf.logging.info("Max evals: %s", MAX_EVALS)
-    best = fmin(
+    best = hyper_tune(
         optimize_cnn,
         space,
         algo=tpe.suggest,
