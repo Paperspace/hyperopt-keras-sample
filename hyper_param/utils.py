@@ -77,7 +77,7 @@ def export_model(model_name):
         # Export Model
         tf.logging.info("Export trained model")
         export_path = export_dir(EXPERIMENT_NAME)
-        model_path = os.path.join(export_path, model_name)
+        model_path = os.path.join(export_path, model_name, '1')
 
         K.set_learning_phase(0)
 
