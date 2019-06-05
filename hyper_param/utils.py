@@ -1,18 +1,23 @@
 
 """Json utils to print, save and load training results."""
-import tensorflow
-from gradient_sdk import model_dir
-from tensorflow.python.client import device_lib
-from bson import json_util
-import json
 import os
+import json
+
+from bson import json_util
+import tensorflow as tf
+from tensorflow.python.saved_model import builder as saved_model_builder, tag_constants
+from tensorflow.python.client import device_lib
+import keras.backend as K
+
+from gradient_sdk import model_dir, export_dir
+
 
 EXPERIMENT_NAME = os.environ.get('EXPERIMENT_NAME')
 RESULTS_DIR = model_dir(EXPERIMENT_NAME)
 
 
 def is_gpu_available():
-    return tensorflow.test.is_gpu_available()
+    return tf.test.is_gpu_available()
 
 
 def get_available_gpus():
@@ -67,5 +72,21 @@ def load_best_hyperspace():
     return load_json_result(best_result_name)["space"]
 
 
-def save_to_mongo(result):
-    print("Result: ", result)
+def export_model(model_name):
+    try:
+        # Export Model
+        tf.logging.info("Export trained model")
+        export_path = export_dir(EXPERIMENT_NAME)
+        model_path = os.path.join(export_path, model_name, '1')
+
+        K.set_learning_phase(0)
+
+        builder = saved_model_builder.SavedModelBuilder(model_path)
+        with K.get_session() as sess:
+            builder.add_meta_graph_and_variables(
+                sess=sess,
+                tags=[tag_constants.SERVING],
+            )
+            builder.save()
+    except Exception as e:
+        tf.logging.error('Model export has failed with error: %s', e)

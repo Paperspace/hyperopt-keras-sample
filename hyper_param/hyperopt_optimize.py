@@ -95,8 +95,6 @@ def plot(hyperspace, file_name_prefix):
         show_shapes=True
     )
 
-    # TODO: export model with model_path
-
     K.clear_session()
     del model
 

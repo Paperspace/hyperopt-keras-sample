@@ -21,11 +21,25 @@ NB_CHANNELS = 3
 IMAGE_BORDER_LENGTH = 32
 NB_CLASSES_FINE = 100
 NB_CLASSES_COARSE = 20
+DATASET_SIZE = int(os.environ.get('DATASET_SIZE', 50000))
+TEST_SIZE = int(DATASET_SIZE*0.2)
+TRAIN_SIZE = int(DATASET_SIZE*0.8)
+CODE_TESTING = int(os.environ.get('CODE_TESTING', 0))
 
 (_, y_train_c), (_, y_test_coarse) = cifar100.load_data(label_mode='coarse')
 (x_train, y_train), (x_test, y_test) = cifar100.load_data(label_mode='fine')
 x_train = x_train.astype('float32') / 255.0 - 0.5
 x_test = x_test.astype('float32') / 255.0 - 0.5
+
+if CODE_TESTING:
+    x_test = x_test[:TEST_SIZE]
+    x_train = x_train[:TRAIN_SIZE]
+    y_test = y_test[:TEST_SIZE]
+    y_train = y_train[:TRAIN_SIZE]
+
+    y_train_c = y_train_c[:TRAIN_SIZE]
+    y_test_coarse = y_test_coarse[:TEST_SIZE]
+
 y_train = keras.utils.to_categorical(y_train, NB_CLASSES_FINE)
 y_test = keras.utils.to_categorical(y_test, NB_CLASSES_FINE)
 y_train_c = keras.utils.to_categorical(y_train_c, NB_CLASSES_COARSE)
@@ -48,6 +62,11 @@ def build_and_train(hype_space, save_best_weights=False, log_for_tensorboard=Fal
 
     K.set_learning_phase(1)
     K.set_image_data_format('channels_last')
+
+    if log_for_tensorboard:
+        # We need a smaller batch size to not blow memory with tensorboard
+        hype_space["lr_rate_mult"] = hype_space["lr_rate_mult"] / 10.0
+        hype_space["batch_size"] = hype_space["batch_size"] / 10.0
 
     model = build_model(hype_space)
     tf.logging.info("After build model")
