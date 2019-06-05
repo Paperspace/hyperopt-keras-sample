@@ -9,7 +9,7 @@ from tensorflow.python.saved_model import builder as saved_model_builder, tag_co
 from tensorflow.python.client import device_lib
 import keras.backend as K
 
-from gradient_sdk import model_dir
+from gradient_sdk import model_dir, export_dir
 
 
 EXPERIMENT_NAME = os.environ.get('EXPERIMENT_NAME')
@@ -76,13 +76,14 @@ def export_model(model_name):
     try:
         # Export Model
         tf.logging.info("Export trained model")
-        model_path = os.path.join(os.environ.get('PS_MODEL_PATH'), EXPERIMENT_NAME)
+        export_path = export_dir(model_name)
+        model_path = os.path.join(export_path, EXPERIMENT_NAME)
 
-        export_dir = os.path.join(model_path, model_name)
+        model_export_dir = os.path.join(model_path, model_name)
 
         K.set_learning_phase(0)
 
-        builder = saved_model_builder.SavedModelBuilder(export_dir)
+        builder = saved_model_builder.SavedModelBuilder(model_export_dir)
         with K.get_session() as sess:
             builder.add_meta_graph_and_variables(
                 sess=sess,
