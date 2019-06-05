@@ -22,7 +22,7 @@ IMAGE_BORDER_LENGTH = 32
 NB_CLASSES_FINE = 100
 NB_CLASSES_COARSE = 20
 DATASET_SIZE = int(os.environ.get('DATASET_SIZE', 50000))
-CODE_TESTING = 0
+CODE_TESTING = int(os.environ.get('CODE_TESTING', 0))
 
 (_, y_train_c), (_, y_test_coarse) = cifar100.load_data(label_mode='coarse')
 (x_train, y_train), (x_test, y_test) = cifar100.load_data(label_mode='fine')
