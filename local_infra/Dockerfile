@@ -1,4 +1,12 @@
-FROM python:3.7
+FROM nvidia/cuda:9.0-cudnn7-runtime-ubuntu16.04
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    build-essential \
+    git \
+    python \
+    python-pip \
+python-setuptools
 
 RUN apt update && apt install -y graphviz
 
@@ -6,8 +14,6 @@ WORKDIR hyper_param
 
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
-RUN sudo ln -s /usr/local/cuda/lib64/stubs/libcuda.so /usr/local/cuda/lib64/stubs/libcuda.so.1
-ENV LD_LIBRARY_PATH="/usr/local/cuda/lib64/stubs/:$LD_LIBRARY_PATH"
 
 COPY hyper_param/ .
 
