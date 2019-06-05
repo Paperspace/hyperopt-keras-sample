@@ -9,7 +9,7 @@ services:
   hks_hyperopt:
     build:
       context: ..
-      dockerfile: local_infra/Dockerfile
+      dockerfile: local_infra/Dockerfile.cpu
     command: python /hyper_param/hyperopt_optimize.py
     depends_on:
       - hks_mongo_db
@@ -21,7 +21,7 @@ services:
   hks_hyperopt_worker:
     build:
       context: ..
-      dockerfile: local_infra/Dockerfile
+      dockerfile: local_infra/Dockerfile.gpu
     command: hyperopt-mongo-worker --mongo hks_mongo_db:27017/testing --exp-key=testing --last-job-timeout=30 --reserve-timeout=200
     depends_on:
       - hks_mongo_db
