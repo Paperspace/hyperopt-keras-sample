@@ -8,7 +8,7 @@ install_req: install_graph_viz
 	pip install -r requirements.txt
 
 install_req_cpu: install_graph_viz
-	pip install -r requirements.txt
+	pip install -r requirements_cpu.txt
 
 run_hyperopt: install_req_cpu
 	cd $(HYPEROPT_DIR) && python hyperopt_optimize.py
