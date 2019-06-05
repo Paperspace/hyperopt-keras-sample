@@ -76,14 +76,12 @@ def export_model(model_name):
     try:
         # Export Model
         tf.logging.info("Export trained model")
-        export_path = export_dir(model_name)
-        model_path = os.path.join(export_path, EXPERIMENT_NAME)
-
-        model_export_dir = os.path.join(model_path, model_name)
+        export_path = export_dir(EXPERIMENT_NAME)
+        model_path = os.path.join(export_path, model_name)
 
         K.set_learning_phase(0)
 
-        builder = saved_model_builder.SavedModelBuilder(model_export_dir)
+        builder = saved_model_builder.SavedModelBuilder(model_path)
         with K.get_session() as sess:
             builder.add_meta_graph_and_variables(
                 sess=sess,
