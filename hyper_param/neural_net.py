@@ -22,19 +22,21 @@ IMAGE_BORDER_LENGTH = 32
 NB_CLASSES_FINE = 100
 NB_CLASSES_COARSE = 20
 DATASET_SIZE = int(os.environ.get('DATASET_SIZE', 50000))
+CODE_TESTING = 0
 
 (_, y_train_c), (_, y_test_coarse) = cifar100.load_data(label_mode='coarse')
 (x_train, y_train), (x_test, y_test) = cifar100.load_data(label_mode='fine')
 x_train = x_train.astype('float32') / 255.0 - 0.5
 x_test = x_test.astype('float32') / 255.0 - 0.5
 
-x_test = x_test[:DATASET_SIZE]
-x_train = x_train[:DATASET_SIZE]
-y_test = y_test[:DATASET_SIZE]
-y_train = y_train[:DATASET_SIZE]
+if CODE_TESTING:
+    x_test = x_test[:DATASET_SIZE]
+    x_train = x_train[:DATASET_SIZE]
+    y_test = y_test[:DATASET_SIZE]
+    y_train = y_train[:DATASET_SIZE]
 
-y_train_c = y_train_c[:DATASET_SIZE]
-y_test_coarse = y_test_coarse[:DATASET_SIZE]
+    y_train_c = y_train_c[:DATASET_SIZE]
+    y_test_coarse = y_test_coarse[:DATASET_SIZE]
 
 y_train = keras.utils.to_categorical(y_train, NB_CLASSES_FINE)
 y_test = keras.utils.to_categorical(y_test, NB_CLASSES_FINE)
