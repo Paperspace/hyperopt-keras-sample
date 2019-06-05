@@ -10,7 +10,7 @@ from utils import load_best_hyperspace, is_gpu_available, print_json
 
 from keras.utils import plot_model
 import keras.backend as K
-from hyperopt import hp, tpe, fmin
+from hyperopt import hp, tpe
 
 import traceback
 
