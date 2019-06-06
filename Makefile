@@ -7,7 +7,7 @@ install_graph_viz:
 install_req: install_graph_viz
 	pip install -r requirements.txt
 
-run_hyperopt:
+run_hyperopt: install_req
     cd $(HYPEROPT_DIR) && python hyperopt_optimize.py
 
 run_hyperopt_worker: install_req
