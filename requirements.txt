@@ -1,8 +1,10 @@
 numpy
 hyperopt
-tensorflow-gpu==1.13.1
+# tensorflow-gpu==1.13.1
+tensorflow==1.13.1
 pydot
 pydot-ng
 scipy
 keras
 gradient-sdk
+gradient-statsd
