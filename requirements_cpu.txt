@@ -1,8 +1,0 @@
-numpy
-hyperopt
-tensorflow==1.13.1
-pydot
-pydot-ng
-scipy
-keras
-gradient-sdk
