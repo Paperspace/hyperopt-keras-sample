@@ -4,6 +4,7 @@ import tensorflow as tf
 import keras.backend as K
 from hyperopt import STATUS_FAIL
 
+from metrics import publish_metrics
 from neural_net import build_and_train
 from utils import save_json_result, is_gpu_available, export_model
 
@@ -23,6 +24,8 @@ def optimize_cnn(hype_space):
 
         # Save training results to disks with unique filenames
         save_json_result(model_name, result)
+
+        publish_metrics(result)
 
         export_model(model_name)
 

@@ -11,6 +11,7 @@ import keras.backend as K
 
 from gradient_sdk import model_dir, export_dir
 
+from metrics import publish_metrics
 
 EXPERIMENT_NAME = os.environ.get('EXPERIMENT_NAME')
 RESULTS_DIR = model_dir(EXPERIMENT_NAME)
@@ -69,6 +70,9 @@ def load_best_hyperspace():
         return None
 
     best_result_name = results[-1]
+
+    publish_metrics(best_result_name, is_best=True)
+
     return load_json_result(best_result_name)["space"]
 
 
