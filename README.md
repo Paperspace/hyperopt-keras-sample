@@ -222,9 +222,11 @@ Remember to set available RAM for docker on mac to at least 4GB (1 GB per docker
 
 # To run it on Paperspace
 
-## Using the gradient CLI
+## Using the Gradient CLI
 
-Assuming that you have configured an API Key for the paperspace cli enter:
+You can run a hyperparameter tuning experiment using the [Gradient CLI](https://github.com/Paperspace/gradient-cli).
+
+Assuming that you have configured an API Key for the Gradient CLI, enter:
 
 ```bash
 gradient hyperparameters run \
@@ -241,7 +243,7 @@ gradient hyperparameters run \
 On successfully creating a hyperparameter experiment it should return something like this:
 
 ```
-Hyperparameter created with ID: <experiment_id> and started
+Hyperparameter created with ID: <experiment-id> and started
 ```
 
 _Note: currently there not a CLI option to pass `experimentEnv` json to start hyperparameter with specific ENV values. However this functionality is available via the `/hyperopt/create_and_start` HTTP API call._
