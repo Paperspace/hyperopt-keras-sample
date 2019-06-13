@@ -222,11 +222,11 @@ Remember to set available RAM for docker on mac to at least 4GB (1 GB per docker
 
 # To run it on Paperspace
 
-## Using the paperspace-python CLI
+## Using the gradient CLI
 
 Assuming that you have configured an API Key for the paperspace cli enter:
 ```bash
-paperspace-python hyperparameters createAndStart \
+gradient hyperparameters run \
   --name HyperoptKerasExperimentCLI1 \
   --projectId <your-project-id> \
   --tuningCommand 'make run_hyperopt' \
