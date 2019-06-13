@@ -222,51 +222,56 @@ Remember to set available RAM for docker on mac to at least 4GB (1 GB per docker
 
 # To run it on Paperspace
 
-## Using the paperspace-python CLI
+## Using the Gradient CLI
 
-Assuming that you have configured an API Key for the paperspace cli enter:
+You can run a hyperparameter tuning experiment on Paperspace using the [Gradient CLI](https://github.com/Paperspace/gradient-cli).
+
+Assuming that you have configured an API Key for the Gradient CLI, enter:
+
 ```bash
-paperspace-python hyperparameters createAndStart \
+gradient hyperparameters run \
   --name HyperoptKerasExperimentCLI1 \
   --projectId <your-project-id> \
   --tuningCommand 'make run_hyperopt' \
   --workerContainer tensorflow/tensorflow:1.13.1-gpu-py3 \
   --workerMachineType K80 \
-  --workerCommand 'make run_hyperopt_worker' 
+  --workerCommand 'make run_hyperopt_worker'
   --workerCount 2 \
   --workspaceUrl git+https://github.com/Paperspace/hyperopt-keras-sample
 ```
 
 On successfully creating a hyperparameter experiment it should return something like this:
+
 ```
-Hyperparameter created with ID: <experiment_id> and started
+Hyperparameter created with ID: <experiment-id> and started
 ```
 
-_Note: currently there not a CLI option to pass `experimentEnv` json to start hyperparameter with specific ENV values.  However this functionality is available via the `/hyperopt/create_and_start` HTTP API call._
-
+_Note: currently there not a CLI option to pass `experimentEnv` json to start hyperparameter with specific ENV values. However this functionality is available via the `/hyperopt/create_and_start` HTTP API call._
 
 ## Using the Paperspace Public API
 
 Make a POST call to url: `https://services.paperspace.io/experiments/v1/hyperopt/create_and_start/`
 
 With this call send headers:
+
 - `x-api-key=<your-api-key>`
 - `Content-Type=application/json`
 
 Example json:
+
 ```json
 {
-    "name": "<your-experiment-name>",
-    "tuningCommand": "make run_hyperopt",
-    "workerCommand": "make run_hyperopt_worker",
-    "workerContainer": "tensorflow/tensorflow:1.13.1-gpu-py3",
-    "workerMachineType": "K80",
-    "workerCount": 2,
-    "projectId": "<your-project-id>",
-    "workspaceUrl": "git+https://github.com/Paperspace/hyperopt-keras-sample",
-    "experimentEnv": {
-        "HKS_EPOCHS": 1,
-		"HKS_MAX_EVALS": 2
-    }
+  "name": "<your-experiment-name>",
+  "tuningCommand": "make run_hyperopt",
+  "workerCommand": "make run_hyperopt_worker",
+  "workerContainer": "tensorflow/tensorflow:1.13.1-gpu-py3",
+  "workerMachineType": "K80",
+  "workerCount": 2,
+  "projectId": "<your-project-id>",
+  "workspaceUrl": "git+https://github.com/Paperspace/hyperopt-keras-sample",
+  "experimentEnv": {
+    "HKS_EPOCHS": 1,
+    "HKS_MAX_EVALS": 2
+  }
 }
 ```
