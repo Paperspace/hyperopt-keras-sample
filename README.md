@@ -224,7 +224,7 @@ Remember to set available RAM for docker on mac to at least 4GB (1 GB per docker
 
 ## Using the Gradient CLI
 
-You can run a hyperparameter tuning experiment using the [Gradient CLI](https://github.com/Paperspace/gradient-cli).
+You can run a hyperparameter tuning experiment on Paperspace using the [Gradient CLI](https://github.com/Paperspace/gradient-cli).
 
 Assuming that you have configured an API Key for the Gradient CLI, enter:
 
