@@ -235,7 +235,7 @@ gradient hyperparameters run \
   --tuningCommand 'make run_hyperopt' \
   --workerContainer tensorflow/tensorflow:1.13.1-gpu-py3 \
   --workerMachineType K80 \
-  --workerCommand 'make run_hyperopt_worker'
+  --workerCommand 'make run_hyperopt_worker' \
   --workerCount 2 \
   --workspaceUrl git+https://github.com/Paperspace/hyperopt-keras-sample
 ```
