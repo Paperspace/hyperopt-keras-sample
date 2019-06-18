@@ -16,7 +16,7 @@ def optimize_cnn(hype_space):
     tf.logging.debug("Hyperspace: ", hype_space)
     tf.logging.debug("\n")
     try:
-        model, model_name, result, _ = build_and_train(hype_space)
+        model, model_name, result, _ = build_and_train(hype_space, log_for_tensorboard=True)
 
         tf.logging.info("Training ended with success:")
         tf.logging.info("Model name: %s", model_name)
