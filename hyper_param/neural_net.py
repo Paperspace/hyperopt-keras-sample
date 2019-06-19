@@ -1,7 +1,9 @@
 
 """Convolutional neural network built with Keras."""
+import datetime
 
 import keras
+from gradient_sdk import export_dir, model_dir
 from keras.datasets import cifar100  # from keras.datasets import cifar10
 from keras.layers.core import K  # import keras.backend as K
 from keras.optimizers import Adam, Nadam, RMSprop
@@ -13,6 +15,7 @@ import os
 
 from utils import print_json
 
+EXPERIMENT_NAME = os.environ.get('EXPERIMENT_NAME')
 TENSORBOARD_DIR = "TensorBoard/"
 WEIGHTS_DIR = "weights/"
 
@@ -73,6 +76,8 @@ def build_and_train(hype_space, save_best_weights=False, log_for_tensorboard=Fal
 
     model_uuid = str(uuid.uuid4())[:5]
 
+    model_name = "model_{}_{}".format(str(datetime.datetime.now()), model_uuid)
+
     callbacks = []
 
     # Weight saving callback:
@@ -91,7 +96,8 @@ def build_and_train(hype_space, save_best_weights=False, log_for_tensorboard=Fal
     # TensorBoard logging callback:
     log_path = None
     if log_for_tensorboard:
-        log_path = os.path.join(TENSORBOARD_DIR, model_uuid)
+        export_path = export_dir(EXPERIMENT_NAME)
+        log_path = os.path.join(export_path, model_name, TENSORBOARD_DIR)
         tf.logging.info("Tensorboard log files will be saved to: {}".format(log_path))
         if not os.path.exists(log_path):
             os.makedirs(log_path)
@@ -121,7 +127,6 @@ def build_and_train(hype_space, save_best_weights=False, log_for_tensorboard=Fal
     score = model.evaluate([x_test], [y_test, y_test_coarse], verbose=0)
     max_acc = max(history['val_fine_outputs_acc'])
 
-    model_name = "model_{}_{}".format(str(max_acc), str(uuid.uuid4())[:5])
     tf.logging.info("Model name: {}".format(model_name))
 
     # Note: to restore the model, you'll need to have a keras callback to
