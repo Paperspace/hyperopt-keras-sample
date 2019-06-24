@@ -12,6 +12,3 @@ run_hyperopt: install_req
 
 run_hyperopt_worker: install_req
 	cd $(HYPEROPT_DIR) && export PYTHONPATH=$PYTHONPATH:$(pwd) && hyperopt-mongo-worker --mongo $(MONGO_DB_HOST):$(MONGO_DB_PORT)/$(EXPERIMENT_NAME) --exp-key=$(EXPERIMENT_NAME) --last-job-timeout=30  --reserve-timeout=200
-
-run_tensorboard:
-    tensorboard --logdir=$(EXPERIMENT_NAME)
