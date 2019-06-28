@@ -160,6 +160,11 @@ if __name__ == "__main__":
 
     tf.logging.set_verbosity(tf.logging.DEBUG)
 
+    # Print ENV Variables
+    tf.logging.debug('=' * 20 + ' Environment Variables ' + '=' * 20)
+    for k, v in os.environ.items():
+        tf.logging.debug('{}: {}'.format(k, v))
+
     if not is_gpu_available():
         tf.logging.warning('GPUs are not available')
 
