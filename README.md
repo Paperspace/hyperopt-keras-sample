@@ -275,3 +275,11 @@ Example json:
   }
 }
 ```
+
+
+### Running TensorBoards
+
+Just type:
+```
+tensorboard --logdir models
+```
