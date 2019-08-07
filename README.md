@@ -1,6 +1,7 @@
 # Paperspace Hyperparameter Tuning for solving CIFAR-100 with a convolutional neural network (CNN) built with Keras and TensorFlow, GPU backend
 
-[![Gradient](https://s3.amazonaws.com/ps.public.resources/img/gradient-badge-gradient-05.svg)](https://gradient.cloud)
+[![Gradient](https://s3.amazonaws.com/ps.public.resources/img/gradient-badge-gradient-05-d-05-05.svg)](https://gradient.paperspace.com)
+
 
 
 This project acts as both a tutorial and demo for using Paperspace Hyperparameter Tuning based on _Hyperopt_ with Keras, TensorFlow, and TensorBoard. Not only do we try to find the best hyperparameters for the given hyperspace, but we also represent the neural network architecture as hyperparameters that can be tuned. This serves to automate the process of searching for the best neural architecture configuration and hyperparameters.
