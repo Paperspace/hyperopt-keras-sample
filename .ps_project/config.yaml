@@ -26,13 +26,13 @@ workflows:
             aggregate: "mean"
           defaults: #[optional]
             precision: 3
-      triggers:
-        branches:
-          ignore: irrelevant-branch
-        tags:
-          only:
-            - v.*
-            - latest
+        triggers:
+          branches:
+            ignore: irrelevant-branch
+          tags:
+            only:
+              - v.*
+              - latest
   param-file-experiment-workflow:
     steps:
       -
@@ -43,6 +43,6 @@ workflows:
           custom:loss:
             target: "0.0..0.5"
             aggregate: "/mean/0"
-      triggers:
-        branches:
-          only: master
+        triggers:
+          branches:
+            only: master
