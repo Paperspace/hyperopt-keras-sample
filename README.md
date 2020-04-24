@@ -2,6 +2,9 @@
 
 [![Gradient](https://assets.paperspace.io/img/gradient-badge.svg)](https://localhost:3002/console/jobs/builder)
 
+[![Gradient Notebook](https://assets.paperspace.io/img/gradient-badge.svg)](https://localhost:3002/console/notebooks/create)
+
+
 
 
 This project acts as both a tutorial and demo for using Paperspace Hyperparameter Tuning based on _Hyperopt_ with Keras, TensorFlow, and TensorBoard. Not only do we try to find the best hyperparameters for the given hyperspace, but we also represent the neural network architecture as hyperparameters that can be tuned. This serves to automate the process of searching for the best neural architecture configuration and hyperparameters.
