@@ -1,6 +1,9 @@
 # Paperspace Hyperparameter Tuning for solving CIFAR-100 with a convolutional neural network (CNN) built with Keras and TensorFlow, GPU backend
 
-[![Gradient](https://s3.amazonaws.com/ps.public.resources/img/gradient-badge-gradient-05-d-05-05.svg)](https://gradient.paperspace.com)
+[![Gradient](https://assets.paperspace.io/img/gradient-badge.svg)](https://localhost:3002/console/jobs/builder)
+
+[![Gradient Notebook](https://assets.paperspace.io/img/gradient-badge.svg)](https://localhost:3002/console/notebooks/create)
+
 
 
 
