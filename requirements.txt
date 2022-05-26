@@ -1,7 +1,7 @@
 numpy
 hyperopt
 #tensorflow-gpu==1.13.1
-tensorflow==1.13.1
+tensorflow==2.7.2
 pydot
 pydot-ng
 scipy
